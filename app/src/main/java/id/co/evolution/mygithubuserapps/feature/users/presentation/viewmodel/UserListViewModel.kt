@@ -7,7 +7,7 @@ import id.co.evolution.mygithubuserapps.core.util.Resource
 import id.co.evolution.mygithubuserapps.feature.users.domain.usecase.SearchUsersUseCase
 import id.co.evolution.mygithubuserapps.feature.users.presentation.state.UserListUiEvent
 import id.co.evolution.mygithubuserapps.feature.users.presentation.state.UserListUiState
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,21 +40,24 @@ class UserListViewModel @Inject constructor(
                 searchQueryFlow.value = event.query
             }
             is UserListUiEvent.OnRetry -> {
-                fetchUsers(_uiState.value.searchQuery)
+                fetchUsers(_uiState.value.searchQuery, forceRefresh = true)
+            }
+            is UserListUiEvent.OnRefresh -> {
+                fetchUsers(_uiState.value.searchQuery, forceRefresh = true)
             }
         }
     }
 
     private fun observeSearchQuery() {
         searchQueryFlow
-            .debounce(500L) // Tunggu 500ms setelah user berhenti mengetik
+            .debounce(500L)
             .distinctUntilChanged()
             .onEach { query -> fetchUsers(query) }
             .launchIn(viewModelScope)
     }
 
-    private fun fetchUsers(query: String) {
-        searchUsersUseCase(query).onEach { result ->
+    private fun fetchUsers(query: String, forceRefresh: Boolean = false) {
+        searchUsersUseCase(query, forceRefresh).onEach { result ->
             when (result) {
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true, error = null) }

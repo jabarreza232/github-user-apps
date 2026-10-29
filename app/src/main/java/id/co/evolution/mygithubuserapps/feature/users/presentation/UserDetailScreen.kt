@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,7 +37,8 @@ fun UserDetailScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     UserDetailContent(
         uiState = uiState,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onRetryClick = { viewModel.retry() }
     )
 }
 
@@ -44,16 +46,25 @@ fun UserDetailScreen(
 @Composable
 fun UserDetailContent(
     uiState: UserDetailUiState,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onRetryClick: () -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         when {
             uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            uiState.error != null -> Text(
-                text = uiState.error,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.align(Alignment.Center)
-            )
+            uiState.error != null -> Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = uiState.error,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = onRetryClick) {
+                    Text("Coba Lagi")
+                }
+            }
             uiState.userDetail != null -> {
                 val detail = uiState.userDetail
                 Column(

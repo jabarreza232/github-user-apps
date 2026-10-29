@@ -6,7 +6,7 @@ import id.co.evolution.mygithubuserapps.feature.users.domain.model.GithubUserDet
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
-    fun getUsers(): Flow<Resource<List<GithubUser>>>
+    fun getUsers(forceRefresh: Boolean = false): Flow<Resource<List<GithubUser>>>
     fun searchUsers(query: String): Flow<Resource<List<GithubUser>>>
-    fun getUserDetail(username: String): Flow<Resource<GithubUserDetail>>
+    fun getUserDetail(username: String, forceRefresh: Boolean = false): Flow<Resource<GithubUserDetail>>
 }

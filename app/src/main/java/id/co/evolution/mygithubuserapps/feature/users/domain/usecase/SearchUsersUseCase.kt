@@ -9,8 +9,8 @@ import javax.inject.Inject
 class SearchUsersUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-    operator fun invoke(query: String): Flow<Resource<List<GithubUser>>> {
-        if (query.isBlank()) return repository.getUsers()
+    operator fun invoke(query: String, forceRefresh: Boolean = false): Flow<Resource<List<GithubUser>>> {
+        if (query.isBlank()) return repository.getUsers(forceRefresh = forceRefresh)
         return repository.searchUsers(query)
     }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetUserDetailUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-    operator fun invoke(username: String): Flow<Resource<GithubUserDetail>> {
-        return repository.getUserDetail(username)
+    operator fun invoke(username: String, forceRefresh: Boolean = false): Flow<Resource<GithubUserDetail>> {
+        return repository.getUserDetail(username, forceRefresh = forceRefresh)
     }
 }
