@@ -17,6 +17,8 @@ okhttp = "4.12.0"
 glideCompose = "1.0.0-beta01"
 dataStorePreference= "1.2.1"
 dataStore= "1.2.1"
+roomKtx = "2.8.5"
+kotlinxSerialization = "1.7.3"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -44,10 +46,13 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glideCompose" }
 data-store-preference = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStorePreference" }
 data-store = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "2.1.10-1.0.30" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

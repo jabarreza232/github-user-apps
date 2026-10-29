@@ -6,7 +6,7 @@ import id.co.evolution.mygithubuserapps.feature.users.domain.repository.UserRepo
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class SearchUseCase @Inject constructor(
+class SearchUsersUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
     operator fun invoke(query: String): Flow<Resource<List<GithubUser>>> {
