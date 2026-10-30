@@ -135,6 +135,7 @@ fun UserListContent(
 
             Button(
                 onClick = { onEvent(UserListUiEvent.OnSearchClick) },
+                enabled = !uiState.isLoading,
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.height(56.dp)
             ) {

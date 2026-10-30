@@ -25,6 +25,12 @@ class UserListViewModel @Inject constructor(
     val uiState: StateFlow<UserListUiState> = _uiState.asStateFlow()
 
     private var originalUsers: List<GithubUser> = emptyList()
+    private var lastSearchTime = 0L
+    private var searchJob: kotlinx.coroutines.Job? = null
+
+    companion object {
+        private const val SEARCH_THROTTLE_MS = 1000L // Jeda 1 detik antar klik pencarian
+    }
 
     init {
         fetchUsers("user")
@@ -49,7 +55,11 @@ class UserListViewModel @Inject constructor(
                 }
             }
             is UserListUiEvent.OnSearchClick -> {
-                fetchUsers(_uiState.value.searchQuery)
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastSearchTime >= SEARCH_THROTTLE_MS && !_uiState.value.isLoading) {
+                    lastSearchTime = currentTime
+                    fetchUsers(_uiState.value.searchQuery)
+                }
             }
             is UserListUiEvent.OnRetry -> {
                 fetchUsers(_uiState.value.searchQuery, forceRefresh = true)
@@ -64,7 +74,8 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun fetchUsers(query: String, forceRefresh: Boolean = false) {
-        searchUsersUseCase(query, forceRefresh).onEach { result ->
+        searchJob?.cancel()
+        searchJob = searchUsersUseCase(query, forceRefresh).onEach { result ->
             when (result) {
                 is Resource.Loading -> {
                     _uiState.update { it.copy(isLoading = true, error = null) }
