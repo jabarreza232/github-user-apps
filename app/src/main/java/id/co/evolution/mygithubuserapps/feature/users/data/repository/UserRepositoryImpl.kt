@@ -31,7 +31,7 @@ class UserRepositoryImpl @Inject constructor(
         if (shouldFetchFromNetwork) {
             try {
                 val remoteUsers = api.getUsers()
-                dao.insertUsers(remoteUsers.map { it.toEntity() })
+                dao.upsertBasicUsers(remoteUsers.map { it.toEntity() })
             } catch (e: Exception) {
                 if (isLocalEmpty) {
                     emit(Resource.Error(e.localizedMessage ?: "Gagal memuat data"))
@@ -52,7 +52,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             val response = api.searchUsers(query)
             val entities = response.items.map { it.toEntity() }
-            dao.insertUsers(entities)
+            dao.upsertBasicUsers(entities)
             emit(Resource.Success(entities.map { it.toDomain() }))
         } catch (e: Exception) {
             val localResults = dao.searchUsersLocal(query).map { it.toDomain() }
@@ -76,7 +76,7 @@ class UserRepositoryImpl @Inject constructor(
         try {
             val remoteDetail = api.getUserDetail(username)
             val entity = remoteDetail.toEntity()
-            dao.insertUser(entity)
+            dao.insertUserDetail(entity)
             emit(Resource.Success(entity.toDetailDomain()))
         } catch (e: Exception) {
             if (localUser != null) {

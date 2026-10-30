@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import id.co.evolution.mygithubuserapps.feature.users.presentation.component.GithubTopAppBar
 import id.co.evolution.mygithubuserapps.feature.users.presentation.state.UserDetailUiState
 import id.co.evolution.mygithubuserapps.feature.users.presentation.viewmodel.UserDetailViewModel
 
@@ -35,21 +37,34 @@ fun UserDetailScreen(
     viewModel: UserDetailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    UserDetailContent(
-        uiState = uiState,
-        onBackClick = onBackClick,
-        onRetryClick = { viewModel.retry() }
-    )
+    Scaffold(
+        topBar = {
+            GithubTopAppBar(
+                title = uiState.userDetail?.username?.let { "@$it" } ?: "Detail User",
+                onBackClick = onBackClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+    ) { innerPadding ->
+        UserDetailContent(
+            uiState = uiState,
+            modifier = Modifier.padding(innerPadding),
+            onBackClick = onBackClick,
+            onRetryClick = { viewModel.retry() }
+        )
+    }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun UserDetailContent(
     uiState: UserDetailUiState,
+    modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     onRetryClick: () -> Unit = {}
 ) {
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Box(modifier = modifier.fillMaxSize().padding(16.dp)) {
         when {
             uiState.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             uiState.error != null -> Column(

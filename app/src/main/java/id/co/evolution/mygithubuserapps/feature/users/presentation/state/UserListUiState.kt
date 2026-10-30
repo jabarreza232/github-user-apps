@@ -6,5 +6,6 @@ data class UserListUiState(
     val isLoading: Boolean = false,
     val users: List<GithubUser> = emptyList(),
     val searchQuery: String = "",
-    val error: String? = null
+    val error: String? = null,
+    val isDarkTheme: Boolean = false
 )
