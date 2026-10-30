@@ -27,7 +27,7 @@ class UserListViewModel @Inject constructor(
     private var originalUsers: List<GithubUser> = emptyList()
 
     init {
-        fetchUsers("")
+        fetchUsers("user")
     }
 
     fun onEvent(event: UserListUiEvent) {
